@@ -1,0 +1,190 @@
+---
+title: "Visualize Data"
+---
+
+## Your Turn 0
+
+Add a setup chunk that loads the tidyverse packages.
+
+
+
+## Your Turn 1
+
+Run the code on the slide to make a graph. Pay strict attention to spelling, capitalization, and parentheses!
+
+```{r}
+
+```
+
+## Your Turn 2
+
+Add `color`, `size`, `alpha`, and `shape` aesthetics to your graph. Experiment.  
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+## Help Me
+
+What do `facet_grid()` and `facet_wrap()` do? 
+(run the code and interpret)
+
+```{r}
+# Makes a plot that the commands below will modify
+q <- ggplot(mpg) + geom_point(aes(x = displ, y = hwy))
+
+q + facet_grid(. ~ cyl)
+q + facet_grid(drv ~ .)
+q + facet_grid(drv ~ cyl)
+q + facet_wrap(~ class)
+```
+
+
+## Your Turn 3
+
+Replace this scatterplot with one that draws boxplots. Use the cheatsheet or try your best guess.
+
+```{r}
+ggplot(mpg) + geom_point(aes(class, hwy))
+```
+
+## Your Turn 4
+
+Make a histogram of the `hwy` variable from dataset `mpg`. Hint: do not supply a y variable.
+
+```{r}
+
+```
+
+## Your Turn 5
+
+Use the help page for `geom_histogram` to make the bins 2 units wide.
+
+```{r}
+
+```
+
+## Your Turn 6
+
+Make a density chart of `hwy` colored by `class`. Use the help page for `geom_density` to choose a "color" aesthetic for class.
+
+```{r}
+
+```
+
+## Your Turn 7
+
+What will this code do? Private chat with your class partner.
+
+```{r}
+ggplot(mpg) + 
+  geom_point(aes(displ, hwy)) +
+  geom_smooth(aes(displ, hwy))
+
+# you can run the code directly to see what it does. BUT,
+# before you do that, just read the code and predict in your
+# head what this code will do.
+```
+
+## Quiz
+
+What is different about this plot? Run the code!
+
+```{r}
+p <- ggplot(mpg) + 
+  geom_point(aes(displ, hwy)) +
+  geom_smooth(aes(displ, hwy))
+
+library(plotly)
+ggplotly(p)
+```
+
+Detach package `plotly`. `plotly` has many functions that have same names as functions in the package `dplyr`, and to avoid any conflict between functions, we are unloading package `plotly` for now.
+
+```{r}
+detach("package:plotly", unload = TRUE)
+```
+
+## Your Turn 8
+
+What does `getwd()` return?
+
+```{r}
+
+```
+
+## Your Turn 9
+
+Save your last plot and then locate it in your files list. You may have to refresh your file listing.
+
+```{r}
+
+```
+
+***
+
+# Take aways
+
+You can use this code template to make thousands of graphs with **ggplot2**.
+
+```{r eval = FALSE}
+ggplot(data = <DATA>) +
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+# Bonus code (run in your own time)
+
+## Heatmaps
+
+There are several methods in R to create a heatmap. Since, I have introduced you to **ggplot2** already, lets explore how you can make one using one of the <geom_function>. More heatmap code can be found at https://www.r-graph-gallery.com/79-levelplot-with-ggplot2.html
+
+```{r}
+# import data
+# this data is from USDA Ag Data Commons
+# https://data.nal.usda.gov/
+alfalfa <- readxl::read_xlsx("ALFALFA-NAL.xlsx", sheet = "DATA") %>% 
+  group_by(Year, State) %>% 
+  summarize(yield = mean(MYield))
+
+# look at first few rows of dataframe
+head(alfalfa)
+
+# create heatmap using `geom-tile`
+heatmap_1 <- ggplot(data = alfalfa,
+                    mapping = aes(x = Year,
+                                  y = State,
+                                  fill = yield)) +
+  geom_tile() # this is the geom_function for creating heatmaps
+
+heatmap_1
+
+# make the heatmap interactive
+library(plotly)
+ggplotly(heatmap_1)
+```
+
+## 3D maps
+
+The package `rayshader` has the ability to turn your **ggplot2** objects into 3D maps.
+
+```{r}
+# create a 2D plot
+mtplot <- ggplot(mtcars) + 
+  geom_point(aes(x = mpg, y = disp, color = cyl)) + 
+  scale_color_continuous(limits = c(0, 8))
+
+mtplot
+
+# convert it to 3D
+library(rayshader)
+plot_gg(mtplot) # this code may not work in RStudio Cloud, but it works on 
+                # RStudio Desktop. If it does not, please let me know. To
+                # learn more about rayshader, please go to
+                # https://www.rayshader.com/
+
+# detach plotly
+detach("package:plotly", unload = TRUE)
+```
+
+

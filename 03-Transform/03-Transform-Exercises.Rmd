@@ -1,0 +1,223 @@
+---
+title: "Transform Data"
+---
+
+```{r setup}
+library(tidyverse)
+
+# Toy datasets to use
+
+pollution <- tribble(
+       ~city,   ~size, ~amount, 
+  "New York", "large",      23,
+  "New York", "small",      14,
+    "London", "large",      22,
+    "London", "small",      16,
+   "Beijing", "large",      121,
+   "Beijing", "small",      56
+)
+
+# library(babynames)
+```
+
+# Import Data
+
+## Your Turn 0
+
+Set the current working directory(you can use the function `setwd()`) to "/cloud/project/03-Transform". Then, import the `babynames.csv` data set, which is in the `03-Transform` folder, as `babynames`. Then copy the import code into the code chunk below. Does it run?
+
+What will you change in the code to make it run?
+
+```{r}
+
+```
+
+```{r}
+babynames
+```
+
+# dplyr
+
+## Your Turn 1
+
+Run the code, and see what it does. After that, alter the code to select just the `n` column:
+
+```{r}
+select(babynames, name, prop)
+```
+
+## Quiz
+
+Which of these is NOT a way to select the `name` and `n` columns together?
+
+```{r}
+select(babynames, -c(year, sex, prop))
+select(babynames, name:n)
+select(babynames, starts_with("n"))
+select(babynames, ends_with("n"))
+```
+
+## Your Turn 2
+
+Use `filter`, `babynames`, and the logical operators to find:
+
+* All of the names where prop is greater than or equal to 0.08  
+* All of the children named "Sea"  
+* All of the baby names from year 2016
+
+Note: the function `filter()` is found in multiple packages. When you start typing `filter` in the chunk below, you may see the first option as `filter{plotly}` i.e. this is the function `filter()` from `plotly` package. We don't want to use this one here. We are looking for one from the `dplyr` package. One way to do that is to put the package name before the function like this `dplyr::filter`. or we can detach the `plotly` package.
+
+```{r}
+
+```
+
+## Your Turn 3
+
+Use Boolean operators to alter the code below to return only the rows that contain:
+
+* _Girls_ named Lucky  
+* Names that were used by exactly 5 or 6 children in 1880  
+* Names that are one of Acura, Lexus, or Yugo
+
+```{r}
+
+```
+
+## Your Turn 4
+
+Arrange `babynames` by n. Add prop as a second (tie breaking) variable to arrange on.
+
+Can you tell the smallest value of n?
+What is the largest value of n?
+
+```{r}
+
+```
+
+## Your Turn 5
+
+Use `desc()` to find the names with the highest prop.
+
+Then, use `desc()` to find the names with the highest n.
+
+```{r}
+
+```
+
+## Your Turn 6
+
+Use `%>%` to write a sequence of functions that: 
+
+1. Filters babynames to just the girls that were born in 2017, *then...*  
+2. Selects the `name` and `n` columns, *then...*  
+3. Arranges the results so that the most popular names are near the top.
+
+```{r}
+
+```
+
+## Your Turn 7
+
+1. Trim `babynames` to just the rows that contain your `name` and your `sex`  
+2. Trim the result to just the columns that will appear in your graph (not strictly necessary, but useful practice)  
+3. Plot the results as a line graph with `year` on the x axis and `prop` on the y axis
+
+```{r}
+
+```
+
+## Your Turn 8
+
+Use `summarise()` to compute three statistics about the data:
+
+1. The first (minimum) year in the dataset  
+2. The last (maximum) year in the dataset  
+3. The total number of children represented in the data
+
+```{r}
+
+```
+
+## Your Turn 9
+
+Copmplete the code below to extract the rows where `name == "Khaleesi"`. Then use `summarise()` and `sum()` and `min()` to find:
+
+1. The total number of children named Khaleesi
+2. The first year Khaleesi appeared in the data
+
+*(Hint: Be sure to remove each `_` before running the code)*
+
+```{r}
+babynames ___ 
+  filter(_______________________) ___
+  ___________(total = ________, first = _______)
+```
+
+
+## Your Turn 10
+
+Use `group_by()`, `summarise()`, and `arrange()` to display the ten most popular names. Compute popularity as the *total* number of children of a single gender given a name.
+
+*(Hint: Be sure to remove each `_` before running the code)*
+
+```{r}
+babynames %>%
+  _______(name, sex) %>% 
+  _______(total = _____(n)) %>% 
+  _______(desc(_____))
+```
+
+
+## Your Turn 11
+
+Use `group_by()` to calculate and then plot the total number of children born each year over time.
+
+```{r}
+
+```
+
+## Your Turn 12
+
+Fill in the blanks to: 
+Rank each name _within its year and sex_. 
+
+*(Hint: Be sure to remove each `_` before running the code)*
+
+```{r}
+babynames %>% 
+  group_by(____, ____) %>% 
+  ______(rank = min_rank(____(prop)))
+```
+
+## Your Turn 13
+
+Fill in the blanks to: 
+Compute the median of the ranks for each name (i.e., _for each combination of name and sex_). Arrange the results from lowest median rank to highest
+
+*(Hint: Be sure to remove each `_` before running the code)*
+
+```{r}
+babynames %>% 
+  group_by(year, sex) %>% 
+  mutate(rank = min_rank(desc(prop))) %>% 
+  group_by(____, ____) %>% 
+  ________(median_rank = ______(_____)) %>% 
+  arrange(median_rank)
+
+```
+
+***
+
+# Take aways
+
+* Extract variables with `select()`  
+* Extract cases with `filter()`  
+* Arrange cases, with `arrange()`  
+
+* Make tables of summaries with `summarise()`  
+* Make new variables, with `mutate()`  
+* Do groupwise operations with `group_by()`
+
+* Connect operations with `%>%`  
+
+
